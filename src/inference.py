@@ -49,9 +49,10 @@ def is_scooter_detected(model: MobileNetV3, image_tensor: Tensor) -> bool:
 
 def is_helmet_detected(model: FasterRCNN, image_tensor: Tensor) -> bool:
     """Check if a helmet is detected."""
-    result = model(image_tensor)
-    helmet_labels = result[0]["labels"].cpu().numpy()
-    return 1 in helmet_labels
+    with torch.no_grad():
+        result = model(image_tensor)
+        helmet_labels = result[0]["labels"].cpu().numpy()
+        return 1 in helmet_labels
 
 
 def inference(
@@ -69,7 +70,8 @@ def inference(
     image = Image.open(image_path)
     image_tensor = F.toTensor()(image).to(device)
 
-    person_inference_result = person_model(image_tensor)
+    with torch.no_grad():
+        person_inference_result = person_model(image_tensor)
     if is_person_detected(person_inference_result):
         boxes = person_inference_result[0]["boxes"].cpu().numpy().astype(int)
 
