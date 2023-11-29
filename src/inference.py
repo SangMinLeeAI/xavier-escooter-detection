@@ -62,6 +62,9 @@ def inference(
     image_path: str,
     device: str = "cpu",
 ) -> int:
+    # TODO input 이미지에 대한 inference 결과를 그려 반환하도록 구현
+    # TODO input을 동영상으로 받도록 구현
+
     """Perform inference on the given image."""
     helmet_model.eval()
     person_model.eval()
