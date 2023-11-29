@@ -2,7 +2,7 @@ import torch
 import torchvision
 from torchvision.models.detection.faster_rcnn import FastRCNNPredictor
 
-from utils import NUM_CLASSES
+from .utils import NUM_CLASSES
 
 
 def get_helmet_model(

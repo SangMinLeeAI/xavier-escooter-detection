@@ -190,4 +190,4 @@ fabric.properties
 pretrained/helmet_detection/fine_tuned_fastercnn_helmet_detection.pth
 pretrained/person_detection/fine_tuned_fastercnn_person_detection.pth
 pretrained/scooter_detection/fine_tuned_mobilenetv3_with_scooter.pth
-
+test.png

@@ -23,7 +23,7 @@ import time
 
 
 # Training
-def train(epoch, model, criterion, optimizer):
+def train(epoch, model, criterion, optimizer, train_loader=None, device=None):
     model.train()
     train_loss = 0
     correct = 0
@@ -57,7 +57,7 @@ def train(epoch, model, criterion, optimizer):
     return epoch_loss, epoch_acc
 
 
-def test(epoch, model, criterion, optimizer):
+def test(epoch, model, criterion, optimizer, val_loader=None, device=None):
     model.eval()
     test_loss = 0
     correct = 0

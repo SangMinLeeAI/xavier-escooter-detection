@@ -1,6 +1,6 @@
 import torch
 
-from utils import LR, LR_MOMENTUM, LR_DECAY_RATE, LR_SCHED_STEP_SIZE, LR_SCHED_GAMMA
+from .utils import LR, LR_MOMENTUM, LR_DECAY_RATE, LR_SCHED_STEP_SIZE, LR_SCHED_GAMMA
 import os
 import re
 import random
