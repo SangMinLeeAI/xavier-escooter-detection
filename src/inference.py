@@ -52,7 +52,7 @@ def is_helmet_detected(model: FasterRCNN, image_tensor: Tensor) -> bool:
     with torch.no_grad():
         result = model(image_tensor)
         helmet_labels = result[0]["labels"].cpu().numpy()
-        return 1 in helmet_labels
+        return 1 in helmet_labels or 2 in helmet_labels or 3 in helmet_labels
 
 
 def inference(
