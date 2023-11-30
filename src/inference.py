@@ -59,20 +59,20 @@ def inference(
                 box_image: Image = image.crop(box)
                 box_image_tensor: Tensor = transforms.ToTensor()(box_image).to(device)
                 # 스쿠터 탔는지 확인
-                scooter_result: Tensor = scooter_model(
-                    change_image_for_scooter(box_image_tensor)
+                helmet_result: List[Dict[str, Tensor]] = helmet_model(
+                    box_image_tensor.unsqueeze(0)
                 )
-                predicted: float = (torch.sigmoid(scooter_result) > 0.2).float().item()
-                if predicted == 1:
-                    # 헬멧 썼는지 확인
-                    helmet_result: List[Dict[str, Tensor]] = helmet_model(
-                        box_image_tensor.unsqueeze(0)
+                helmet_labels: List = helmet_result[0]["labels"].tolist()
+                if 1 in helmet_labels:
+                    labels[index] = 2
+                else:
+                    scooter_result: Tensor = scooter_model(
+                        change_image_for_scooter(box_image_tensor)
                     )
-                    helmet_labels: List = helmet_result[0]["labels"].tolist()
-                    if 1 in helmet_labels:
-                        labels[index] = 2
-                    else:
+                    predicted: float = (torch.sigmoid(scooter_result) > 0.2).float().item()
+                    if predicted == 1:
                         labels[index] = 3
+
     box_result: List[int] = [i for j, i in enumerate(boxes) if j not in to_delete]
     label_result: List[int] = [i for j, i in enumerate(labels) if j not in to_delete]
     score_result: List[int] = [i for j, i in enumerate(scores) if j not in to_delete]

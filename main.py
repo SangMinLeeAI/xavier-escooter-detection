@@ -22,5 +22,11 @@ if __name__ == "__main__":
     image = Image.open("example_with_helmet.jpeg").convert("RGB")
     image_tensor = transforms.ToTensor()(image).to("cpu").permute(1, 2, 0).numpy()
     boxes, labels, scores = inference(helmet_model, person_model, scooter_model, image)
-    class_labels = ["person", "scooter", "helmet"]
-    plot_image(image_tensor, boxes, labels, scores, class_labels)
+    class_labels = ["Background", "person", "person_with_helmet", "criminal"]
+    print(labels)
+    plot_image(
+        img = image_tensor,
+        boxes = boxes,
+        scores= scores,
+        labels= labels,
+        class_label= class_labels)
