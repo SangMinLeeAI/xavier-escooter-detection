@@ -25,8 +25,9 @@ if __name__ == "__main__":
     class_labels = ["Background", "person", "person_with_helmet", "criminal"]
     print(labels)
     plot_image(
-        img = image_tensor,
-        boxes = boxes,
-        scores= scores,
-        labels= labels,
-        class_label= class_labels)
+        img=image_tensor,
+        boxes=boxes,
+        scores=scores,
+        labels=labels,
+        class_label=class_labels,
+    )

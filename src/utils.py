@@ -3,12 +3,12 @@ from matplotlib import pyplot as plt, patches
 
 
 def plot_image(
-        img: np.ndarray,
-        boxes: np.ndarray,
-        scores: np.ndarray,
-        labels: np.ndarray,
-        class_label: np.ndarray,
-        save_path: object = None,
+    img: np.ndarray,
+    boxes: np.ndarray,
+    scores: np.ndarray,
+    labels: np.ndarray,
+    class_label: np.ndarray,
+    save_path: object = None,
 ) -> object:
     """
     Function that draws the BBoxes, scores, and labels on the image.
