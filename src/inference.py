@@ -1,5 +1,7 @@
+import time
 from typing import List, Dict, Tuple
 
+import cv2
 import numpy as np
 import torch
 from PIL import Image
@@ -8,6 +10,8 @@ from torchvision.models import MobileNetV3
 from torchvision.models.detection import FasterRCNN
 from torchvision.transforms import functional as F
 from torchvision import transforms
+
+from src.utils import plot_image
 
 
 def resize_box(box: np.ndarray, factor: float = 0.3) -> np.ndarray:
@@ -93,3 +97,54 @@ def inference(
         [labels[i] for i in valid_indices],
         [scores[i] for i in valid_indices],
     )
+
+
+def get_live_inference_from_camera(
+    helmet_model: FasterRCNN,
+    person_model: FasterRCNN,
+    scooter_model: MobileNetV3,
+    class_labels: List[str],
+    device: str = "cpu",
+    camera_id: int = 0,
+):
+    cap = cv2.VideoCapture(camera_id)
+    cap.set(3, 640)
+    cap.set(4, 480)
+    time.sleep(2)
+
+    while True:
+        ret, frame = cap.read()
+        if ret:
+            image = Image.fromarray(frame)
+            image_tensor = (
+                transforms.ToTensor()(image).to("cpu").permute(1, 2, 0).numpy()
+            )
+
+            # Assuming the inference function returns bounding boxes in the format [x_min, y_min, x_max, y_max]
+            boxes, labels, scores = inference(
+                helmet_model, person_model, scooter_model, image
+            )
+
+            for box, label, score in zip(boxes, labels, scores):
+                x_min, y_min, x_max, y_max = map(int, box)
+                cv2.rectangle(frame, (x_min, y_min), (x_max, y_max), (0, 255, 0), 2)
+                cv2.putText(
+                    frame,
+                    f"Class: {class_labels[label]}, Score: {score:.2f}",
+                    (x_min, y_min - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.5,
+                    (0, 255, 0),
+                    2,
+                )
+
+            # Display the result
+            cv2.imshow("Object Detection", frame)
+
+            if cv2.waitKey(1) & 0xFF == ord("q"):
+                break
+        else:
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()

@@ -1,5 +1,6 @@
 import numpy as np
 from matplotlib import pyplot as plt, patches
+import cv2
 
 
 def plot_image(
@@ -58,3 +59,17 @@ def plot_image(
         plt.savefig(save_path)
 
     plt.show()
+
+
+def get_live_input_from_camera():
+    """
+    Function to get live input from camera
+    """
+    cap = cv2.VideoCapture(0)
+    while True:
+        ret, frame = cap.read()
+        cv2.imshow("Live Input", frame)
+        if cv2.waitKey(1) & 0xFF == ord("q"):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
