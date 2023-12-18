@@ -60,7 +60,6 @@ class CustomObjectDetectionDataset(Dataset):
             if xmax <= xmin or ymax <= ymin or xmax == 0 or ymax == 0:
                 continue
 
-            # Map class labels to integers (adjust as needed)
             class_mapping = {
                 "helmet": 1,
                 "head_with_helmet": 2,
@@ -80,7 +79,7 @@ class CustomObjectDetectionDataset(Dataset):
             "labels": torch.tensor(labels, dtype=torch.int64),
             "image_id": torch.tensor(
                 [extracted_int]
-            ),  # You can modify this if you have multiple images
+            ),
             "area": torch.tensor(
                 [(xmax - xmin) * (ymax - ymin) for xmin, ymin, xmax, ymax in boxes],
                 dtype=torch.float32,
@@ -97,21 +96,17 @@ Class that holds all the augmentation related attributes
 
 
 class Transformation:
-    # This provides a random probability of the augmentation to be applied or not
     def get_probability(self):
         return np.random.choice([False, True], replace=False, p=[0.5, 0.5])
 
-    # Increases the contrast by a factor of 2
     def random_adjust_contrast(self, image, enable=None):
         enable = self.get_probability() if enable is None else enable
         return F.adjust_contrast(image, 2) if enable else image
 
-    # Increaes the brightness by a factor of 2
     def random_adjust_brightness(self, image, enable=None):
         enable = enable = self.get_probability() if enable is None else enable
         return F.adjust_brightness(image, 2) if enable else image
 
-    # Horizontal flip
     def random_hflip(self, image, boxes, enable=None):
         enable = enable = self.get_probability() if enable is None else enable
         if enable:
@@ -124,7 +119,7 @@ class Transformation:
             new_boxes[:, 2] = image.shape[2] - boxes[:, 2]  # image_width - xmax
             new_boxes = new_boxes[
                 :, [2, 1, 0, 3]
-            ]  # Interchange the xmin and xmax due to mirroring
+            ]  
             return new_image, new_boxes
         else:
             return image, boxes
