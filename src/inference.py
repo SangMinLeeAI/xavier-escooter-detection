@@ -11,7 +11,6 @@ from torchvision.models.detection import FasterRCNN
 from torchvision.transforms import functional as F
 from torchvision import transforms
 
-from src.utils import plot_image
 
 
 def resize_box(box: np.ndarray, factor: float = 0.3) -> np.ndarray:
@@ -87,11 +86,11 @@ def inference(
         box = resize_box(boxes[index])
         box_image_tensor = crop_and_transform(image, box, device)
 
-        if is_helmet_present(helmet_model, box_image_tensor):
-            labels[index] = 2
-        elif is_scooter_present(scooter_model, box_image_tensor):
-            labels[index] = 3
-
+        if is_scooter_present(scooter_model, box_image_tensor):
+            if is_helmet_present(helmet_model, box_image_tensor):
+                labels[index] = 2
+            else:
+                labels[index] = 3
     return (
         [boxes[i] for i in valid_indices],
         [labels[i] for i in valid_indices],
@@ -148,3 +147,5 @@ def get_live_inference_from_camera(
 
     cap.release()
     cv2.destroyAllWindows()
+
+

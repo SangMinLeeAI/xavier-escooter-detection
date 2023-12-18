@@ -1,6 +1,7 @@
 import numpy as np
-from matplotlib import pyplot as plt, patches
 import cv2
+import matplotlib.pyplot as plt
+from matplotlib import patches
 
 
 def plot_image(

@@ -119,7 +119,7 @@ class Transformation:
             new_boxes[:, 2] = image.shape[2] - boxes[:, 2]  # image_width - xmax
             new_boxes = new_boxes[
                 :, [2, 1, 0, 3]
-            ]  
+            ]
             return new_image, new_boxes
         else:
             return image, boxes
